@@ -11,6 +11,7 @@
           <!-- Makes POST request to /login route -->
           <form action="/login" method="POST">
             <div class="form-group">
+              <p class="invalid-data" value=><%=wrongLogin %></p>
               <label for="email">Email</label>
               <input type="email" class="form-control" name="username">
             </div>
@@ -39,4 +40,5 @@
   </div>
 </div>
 
+<script src="index.js"></script>
 <%- include('partials/footer') %>

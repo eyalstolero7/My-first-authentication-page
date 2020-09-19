@@ -14,3 +14,11 @@ body {
   color: #fff;
   background-color: #000;
 }
+
+.invalid-data {
+  color: red;
+}
+
+.invisible {
+  visibility: collapse;
+}
