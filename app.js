@@ -5,7 +5,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
-const md5 = require("md5");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 const app = express();
 
@@ -45,17 +46,30 @@ app.route("/login")
     })
     .post(function (req, res) {
         const username = req.body.username;
-        const password = md5(req.body.password);
+        const password = req.body.password;
 
         User.findOne({ email: username }, function (err, foundUser) {
             if (err) {
                 console.log(err);
-            } else if (foundUser && foundUser.password === password) {
-                res.redirect("/secrets");
+            } else if (foundUser) {
+                bcrypt.compare(password, foundUser.password, function (
+                    err,
+                    result
+                ) {
+                    if (result) {
+                        res.redirect("/secrets");
+                    }
+                    else {
+                        res.render("login", {
+                            wrongLogin:
+                                "* Email and password doesn't match!",
+                        });
+                    }
+                });
             } else {
                 res.render("login", {
                     wrongLogin:
-                        "* Email doesn't exists or the password doesn't match!",
+                        "* Email doesn't exists!",
                 });
             }
         });
@@ -66,16 +80,18 @@ app.route("/register")
         res.render("register");
     })
     .post(function (req, res) {
-        const user = new User({
-            email: req.body.username,
-            password: md5(req.body.password),
-        });
-        user.save(function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                res.redirect("/secrets");
-            }
+        bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
+            const user = new User({
+                email: req.body.username,
+                password: hash,
+            });
+            user.save(function (err) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    res.redirect("/secrets");
+                }
+            });
         });
     });
 
