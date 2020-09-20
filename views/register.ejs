@@ -11,6 +11,7 @@
           <!-- Makes POST request to /register route -->
           <form action="/register" method="POST">
             <div class="form-group">
+              <p class="invalid-data" value=><%=wrongLogin %></p>
               <label for="email">Email</label>
               <input type="email" class="form-control" name="username">
             </div>
@@ -32,6 +33,10 @@
             <i class="fab fa-google"></i>
             Sign Up with Google
           </a>
+          <a class="btn btn-block btn-social btn-facebook" href="/auth/facebook" role="button">
+            <i class="fab fa-facebook"></i>
+            Sign In with Facebook
+          </a>
         </div>
       </div>
     </div>
@@ -39,4 +44,5 @@
   </div>
 </div>
 
+<script src="index.js"></script>
 <%- include('partials/header') %>
